@@ -28,6 +28,9 @@ Game.prototype = {
     } else {
       this.thrower = this.player1;
     }
+    if (this.thrower.isOnAFinish() && this.winner == null) {
+      alert(this.thrower.name + ', you require ' + this.thrower.currentScore);
+    }
   },
 
   getPlayer: function(playerNum) {

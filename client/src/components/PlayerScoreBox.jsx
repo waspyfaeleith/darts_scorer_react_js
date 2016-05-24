@@ -4,16 +4,16 @@ var PlayerScoreForm = require('./PlayerScoreForm');
 var PlayerScoreBox = React.createClass({
 
   render: function() {
-    this.props.player.scores.pop;//the last one is the current score
     var scores = this.props.player.scores.map(function (score, index) {
               return <li className="strikeThrough" key={index}>{score}</li>;
           });
+    scores.pop(); //the last one is the current score so we don't want it struck through
     return (
       <div className="playerScoreBox">
         <ul>
-          { scores } 
-        </ul>
-        { this.props.player.currentScore }
+          { scores }
+          <li> { this.props.player.currentScore } </li>
+        </ul>       
       </div>
     );
   }

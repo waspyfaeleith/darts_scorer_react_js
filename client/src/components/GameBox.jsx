@@ -28,8 +28,18 @@ var GameBox = React.createClass({
   },
 
   render: function() {
+    var header;
+     if (this.state.game.winner != null) {
+        header = <span>Game shot, and the leg, to {this.state.game.winner.name}</span>
+     } else {
+      header = <span> {this.state.game.thrower.name} to Throw 
+      <PlayerScoreForm onSubmitScore={this.onSubmitScore}></PlayerScoreForm></span>;
+    }
     return (
       <div className="scores">
+      <div>
+        { header }
+      </div>
         <div className="scoreHeader">
           <label id="lblStartScore">501</label>
         </div>
@@ -55,10 +65,6 @@ var GameBox = React.createClass({
             </tr>
           </tbody>
         </table>
-        <div>
-          <p>{this.state.game.thrower.name} to Throw</p>
-          <PlayerScoreForm onSubmitScore={this.onSubmitScore}></PlayerScoreForm>
-        </div>
       </div>
     );
   }

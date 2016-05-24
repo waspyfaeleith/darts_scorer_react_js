@@ -2,7 +2,7 @@ var React = require('react');
 
 var PlayerScoreForm = React.createClass({
   getInitialState: function() {
-    return {score: 0};
+    return {score: ''};
   },
 
   handleScoreChange: function(e) {

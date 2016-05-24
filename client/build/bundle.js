@@ -19703,9 +19703,32 @@
 	  },
 	
 	  render: function render() {
+	    var header;
+	    if (this.state.game.winner != null) {
+	      header = React.createElement(
+	        'span',
+	        null,
+	        'Game shot, and the leg, to ',
+	        this.state.game.winner.name
+	      );
+	    } else {
+	      header = React.createElement(
+	        'span',
+	        null,
+	        ' ',
+	        this.state.game.thrower.name,
+	        ' to Throw',
+	        React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
+	      );
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'scores' },
+	      React.createElement(
+	        'div',
+	        null,
+	        header
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'scoreHeader' },
@@ -19762,17 +19785,6 @@
 	            )
 	          )
 	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'p',
-	          null,
-	          this.state.game.thrower.name,
-	          ' to Throw'
-	        ),
-	        React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
 	      )
 	    );
 	  }
@@ -19815,6 +19827,9 @@
 	      this.thrower = this.player2;
 	    } else {
 	      this.thrower = this.player1;
+	    }
+	    if (this.thrower.isOnAFinish() && this.winner == null) {
+	      alert(this.thrower.name + ', you require ' + this.thrower.currentScore);
 	    }
 	  },
 	
@@ -19911,6 +19926,7 @@
 	  isBust: function isBust(playerThrow) {
 	    if (playerThrow.score > this.currentScore || this.currentScore - playerThrow.score == 1) {
 	      console.log('BUST!!');
+	      alert('Bust!!!');
 	      return true;
 	    }
 	    return false;
@@ -20028,7 +20044,6 @@
 	
 	
 	  render: function render() {
-	    this.props.player.scores.pop; //the last one is the current score
 	    var scores = this.props.player.scores.map(function (score, index) {
 	      return React.createElement(
 	        'li',
@@ -20036,15 +20051,22 @@
 	        score
 	      );
 	    });
+	    scores.pop(); //the last one is the current score so we don't want it struck through
 	    return React.createElement(
 	      'div',
 	      { className: 'playerScoreBox' },
 	      React.createElement(
 	        'ul',
 	        null,
-	        scores
-	      ),
-	      this.props.player.currentScore
+	        scores,
+	        React.createElement(
+	          'li',
+	          null,
+	          ' ',
+	          this.props.player.currentScore,
+	          ' '
+	        )
+	      )
 	    );
 	  }
 	});
@@ -20055,15 +20077,15 @@
 /* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
 	
 	var PlayerScoreForm = React.createClass({
-	  displayName: "PlayerScoreForm",
+	  displayName: 'PlayerScoreForm',
 	
 	  getInitialState: function getInitialState() {
-	    return { score: 0 };
+	    return { score: '' };
 	  },
 	
 	  handleScoreChange: function handleScoreChange(e) {
@@ -20079,10 +20101,10 @@
 	
 	  render: function render() {
 	    return React.createElement(
-	      "form",
-	      { className: "playerScoreForm", onSubmit: this.handleSubmit },
-	      React.createElement("input", { type: "text", placeholder: " Enter Score", onChange: this.handleScoreChange }),
-	      React.createElement("input", { type: "submit", className: "submitScore", value: "Enter" })
+	      'form',
+	      { className: 'playerScoreForm', onSubmit: this.handleSubmit },
+	      React.createElement('input', { type: 'text', placeholder: ' Enter Score', onChange: this.handleScoreChange }),
+	      React.createElement('input', { type: 'submit', className: 'submitScore', value: 'Enter' })
 	    );
 	  }
 	});

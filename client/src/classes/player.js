@@ -18,6 +18,7 @@ Player.prototype = {
     if ((playerThrow.score > this.currentScore) || 
           ((this.currentScore - playerThrow.score) == 1) ) {
       console.log('BUST!!');
+      alert('Bust!!!');
       return true;
     }
     return false;
