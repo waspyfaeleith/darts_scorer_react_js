@@ -1,8 +1,6 @@
 var Player = require('./player');
 var Throw = require('./throw');
 
-//var readlineSync = require('readline-sync');
-
 var Game = function() {
   this.startScore = 501;
   var player1 = new Player();
@@ -28,28 +26,27 @@ Game.prototype = {
     } else {
       this.thrower = this.player1;
     }
-    if (this.thrower.isOnAFinish() && this.winner == null) {
-      alert(this.thrower.name + ', you require ' + this.thrower.currentScore);
-    }
   },
 
   getPlayer: function(playerNum) {
-    //var name = readlineSync.question('Enter player ' + playerNum + ' name : ',
-    //                  { hideEchoBack: false });
-    console.log(name);
+    //console.log(name);
     return name;
   },
 
   setPlayer: function(playerNum, playerName) {
-    //var name = readlineSync.question('Enter player ' + playerNum + ' name : ',
-    //                  { hideEchoBack: false });
-    //console.log(name);
-    //return name;
     if (playerNum == 1) {
       this.player1 = new Player(playerName, this.startScore);
     } else if (playerNum == 2) {
       this.player2 = new Player(playerName, this.startScore);
     }
+  },
+
+  setPlayers: function(player1, player2) {
+    console.log(player1 + " v " + player2)
+    this.player1 = new Player(player1, this.startScore);
+    this.player2 = new Player(player2, this.startScore);
+    this.thrower = this.player1;
+    return this.gameState();
   },
 
   start: function() {
@@ -60,14 +57,11 @@ Game.prototype = {
     playerName = this.getPlayer(2);
 
     this.player2 = new Player(playerName, this.startScore);
-    console.log(this.player1.name + ' vs ' + this.player2.name);
+    //console.log(this.player1.name + ' vs ' + this.player2.name);
     this.thrower = this.player1;
   },
 
   getScore: function() {
-    //var score = readlineSync.question(
-    //  '\n\nEnter ' + this.thrower.name + '\'s score : ',
-    //  { hideEchoBack: false });
     return score;
   },
 
@@ -80,12 +74,12 @@ Game.prototype = {
     }
       
     this.thrower.throwDarts(t);
-    console.log(this.thrower.name + ' has ' + this.thrower.currentScore);
+    //console.log(this.thrower.name + ' has ' + this.thrower.currentScore);
     if (this.thrower.currentScore == 0) {
       this.winner = this.thrower;
     }
     this.changeThrower();
-    console.log(this.thrower.name + " to throw");
+    //console.log(this.thrower.name + " to throw");
     return this.gameState();
   },
 
@@ -94,8 +88,7 @@ Game.prototype = {
     do {
       this.getPlayerScore();
     } while (this.winner == null);
-
-    console.log('\nGame shot, and the leg, to ' + this.winner.name);
+    //console.log('\nGame shot, and the leg, to ' + this.winner.name);
   }
 };
 

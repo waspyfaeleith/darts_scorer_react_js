@@ -19683,110 +19683,127 @@
 	
 	  getInitialState: function getInitialState() {
 	    var game = new Game();
-	    game.setPlayer(1, "Jack");
-	    game.setPlayer(2, "Victor");
-	    game.thrower = game.player1;
 	    return { game: game };
 	  },
 	
+	  onStartGame: function onStartGame(players) {
+	    var gameState = this.state.game.setPlayers(players.player1, players.player2);
+	    this.setState({ game: gameState });
+	  },
+	
 	  onSubmitScore: function onSubmitScore(score) {
-	    console.log("player threw " + score);
+	    //console.log("player threw " + score);
 	    var gameState = this.state.game.playerThrow(score);
 	    this.setState({ game: gameState });
-	    //this.state.game.playerThrow(score);
 	  },
 	
 	  handleStartGame: function handleStartGame(players) {
-	    console.log(players);
-	    console.log(players.player1);
 	    this.state.game.setPlayer(1, players.player1);
 	  },
 	
 	  render: function render() {
-	    var header;
-	    if (this.state.game.winner != null) {
-	      header = React.createElement(
-	        'span',
+	    if (this.state.game.player1 == null || this.state.game.player2 == null) {
+	      return React.createElement(
+	        'div',
 	        null,
-	        'Game shot, and the leg, to ',
-	        this.state.game.winner.name
+	        React.createElement(GameStartBox, { onStartGame: this.onStartGame })
 	      );
 	    } else {
-	      header = React.createElement(
-	        'span',
-	        null,
-	        ' ',
-	        this.state.game.thrower.name,
-	        ' to Throw',
-	        React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
-	      );
-	    }
-	    return React.createElement(
-	      'div',
-	      { className: 'scores' },
-	      React.createElement(
-	        'div',
-	        null,
-	        header
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'scoreHeader' },
-	        React.createElement(
-	          'label',
-	          { id: 'lblStartScore' },
-	          '501'
-	        )
-	      ),
-	      React.createElement(
-	        'table',
-	        { className: 'scoreTable' },
-	        React.createElement(
-	          'thead',
+	      var header;
+	      if (this.state.game.winner != null) {
+	        header = React.createElement(
+	          'span',
 	          null,
+	          'Game shot, and the leg, to ',
+	          this.state.game.winner.name
+	        );
+	      } else if (this.state.game.thrower.isOnAFinish()) {
+	        header = React.createElement(
+	          'span',
+	          null,
+	          ' ',
+	          this.state.game.thrower.name,
+	          ', you require ',
+	          this.state.game.thrower.currentScore,
+	          React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
+	        );
+	      } else {
+	        header = React.createElement(
+	          'span',
+	          null,
+	          ' ',
+	          this.state.game.thrower.name,
+	          ' to Throw',
+	          React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
+	        );
+	      }
+	      return React.createElement(
+	        'div',
+	        { className: 'scores' },
+	        React.createElement(
+	          'div',
+	          null,
+	          header
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'scoreHeader' },
 	          React.createElement(
-	            'tr',
-	            { className: 'trPlayerHeader' },
-	            React.createElement(
-	              'td',
-	              { className: 'thPlayer1Name' },
-	              React.createElement(
-	                'label',
-	                { className: 'currentScore scoreboardItem', id: 'lblPlayer1Name' },
-	                this.state.game.player1.name
-	              )
-	            ),
-	            React.createElement(
-	              'td',
-	              { className: 'thPlayer2Name' },
-	              React.createElement(
-	                'label',
-	                { className: 'currentScore scoreboardItem', id: 'lblPlayer2Name' },
-	                this.state.game.player2.name
-	              )
-	            )
+	            'label',
+	            { id: 'lblStartScore' },
+	            '501'
 	          )
 	        ),
 	        React.createElement(
-	          'tbody',
-	          null,
+	          'table',
+	          { className: 'scoreTable' },
 	          React.createElement(
-	            'tr',
-	            { className: 'trScores' },
+	            'thead',
+	            null,
 	            React.createElement(
-	              'td',
-	              { className: 'thScore thPlayerScore' },
-	              React.createElement(PlayerScoreBox, { player: this.state.game.player1 })
-	            ),
+	              'tr',
+	              { className: 'trPlayerHeader' },
+	              React.createElement(
+	                'td',
+	                { className: 'thPlayer1Name' },
+	                React.createElement(
+	                  'label',
+	                  { className: 'currentScore scoreboardItem', id: 'lblPlayer1Name' },
+	                  this.state.game.player1.name
+	                )
+	              ),
+	              React.createElement(
+	                'td',
+	                { className: 'thPlayer2Name' },
+	                React.createElement(
+	                  'label',
+	                  { className: 'currentScore scoreboardItem', id: 'lblPlayer2Name' },
+	                  this.state.game.player2.name
+	                )
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
 	            React.createElement(
-	              'td',
-	              { className: 'thPlayerScore' },
-	              React.createElement(PlayerScoreBox, { player: this.state.game.player2 })
+	              'tr',
+	              { className: 'trScores' },
+	              React.createElement(
+	                'td',
+	                { className: 'thScore thPlayerScore' },
+	                React.createElement(PlayerScoreBox, { player: this.state.game.player1 })
+	              ),
+	              React.createElement(
+	                'td',
+	                { className: 'thPlayerScore' },
+	                React.createElement(PlayerScoreBox, { player: this.state.game.player2 })
+	              )
 	            )
 	          )
 	        )
-	      )
-	    );
+	      );
+	    }
 	  }
 	});
 	
@@ -19800,8 +19817,6 @@
 	
 	var Player = __webpack_require__(162);
 	var Throw = __webpack_require__(163);
-	
-	//var readlineSync = require('readline-sync');
 	
 	var Game = function Game() {
 	  this.startScore = 501;
@@ -19828,28 +19843,27 @@
 	    } else {
 	      this.thrower = this.player1;
 	    }
-	    if (this.thrower.isOnAFinish() && this.winner == null) {
-	      alert(this.thrower.name + ', you require ' + this.thrower.currentScore);
-	    }
 	  },
 	
 	  getPlayer: function getPlayer(playerNum) {
-	    //var name = readlineSync.question('Enter player ' + playerNum + ' name : ',
-	    //                  { hideEchoBack: false });
-	    console.log(name);
+	    //console.log(name);
 	    return name;
 	  },
 	
 	  setPlayer: function setPlayer(playerNum, playerName) {
-	    //var name = readlineSync.question('Enter player ' + playerNum + ' name : ',
-	    //                  { hideEchoBack: false });
-	    //console.log(name);
-	    //return name;
 	    if (playerNum == 1) {
 	      this.player1 = new Player(playerName, this.startScore);
 	    } else if (playerNum == 2) {
 	      this.player2 = new Player(playerName, this.startScore);
 	    }
+	  },
+	
+	  setPlayers: function setPlayers(player1, player2) {
+	    console.log(player1 + " v " + player2);
+	    this.player1 = new Player(player1, this.startScore);
+	    this.player2 = new Player(player2, this.startScore);
+	    this.thrower = this.player1;
+	    return this.gameState();
 	  },
 	
 	  start: function start() {
@@ -19860,14 +19874,11 @@
 	    playerName = this.getPlayer(2);
 	
 	    this.player2 = new Player(playerName, this.startScore);
-	    console.log(this.player1.name + ' vs ' + this.player2.name);
+	    //console.log(this.player1.name + ' vs ' + this.player2.name);
 	    this.thrower = this.player1;
 	  },
 	
 	  getScore: function getScore() {
-	    //var score = readlineSync.question(
-	    //  '\n\nEnter ' + this.thrower.name + '\'s score : ',
-	    //  { hideEchoBack: false });
 	    return score;
 	  },
 	
@@ -19880,12 +19891,12 @@
 	    }
 	
 	    this.thrower.throwDarts(t);
-	    console.log(this.thrower.name + ' has ' + this.thrower.currentScore);
+	    //console.log(this.thrower.name + ' has ' + this.thrower.currentScore);
 	    if (this.thrower.currentScore == 0) {
 	      this.winner = this.thrower;
 	    }
 	    this.changeThrower();
-	    console.log(this.thrower.name + " to throw");
+	    //console.log(this.thrower.name + " to throw");
 	    return this.gameState();
 	  },
 	
@@ -19894,8 +19905,7 @@
 	    do {
 	      this.getPlayerScore();
 	    } while (this.winner == null);
-	
-	    console.log('\nGame shot, and the leg, to ' + this.winner.name);
+	    //console.log('\nGame shot, and the leg, to ' + this.winner.name);
 	  }
 	};
 	
@@ -19933,9 +19943,7 @@
 	  },
 	
 	  isOnAFinish: function isOnAFinish() {
-	
 	    var highFinishes = [170, 167, 164, 161, 160];
-	
 	    if (highFinishes.indexOf(this.currentScore) > -1 || this.currentScore < 159) {
 	      return true;
 	    } else {
@@ -19945,7 +19953,6 @@
 	
 	  isWinningScore: function isWinningScore(playerThrow) {
 	    if (playerThrow.score == this.currentScore) {
-	      currentScore = 0;
 	      return true;
 	    }
 	    return false;
@@ -19990,7 +19997,7 @@
 	  displayName: 'GameStartBox',
 	
 	  getInitialState: function getInitialState() {
-	    return { player1: 'Player 1', player2: 'Player 2' };
+	    return { player1: '', player2: '' };
 	  },
 	  handlePlayer1Change: function handlePlayer1Change(e) {
 	    this.setState({ player1: e.target.value });
@@ -20005,9 +20012,8 @@
 	
 	    var players = { player1: player1, player2: player2 };
 	    this.props.onStartGame(players);
-	
-	    //this.setState({player1: 'Player 1', player2: 'Player 2'});
 	  },
+	
 	  render: function render() {
 	    return React.createElement(
 	      'div',
@@ -20052,20 +20058,28 @@
 	      );
 	    });
 	    scores.pop(); //the last one is the current score so we don't want it struck through
+	    if (this.props.player.currentScore == 0) {
+	      scores.push(React.createElement(
+	        'li',
+	        null,
+	        ' Game Shot! '
+	      ));
+	    } else {
+	      scores.push(React.createElement(
+	        'li',
+	        null,
+	        ' ',
+	        this.props.player.currentScore,
+	        ' '
+	      ));
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'playerScoreBox' },
 	      React.createElement(
 	        'ul',
 	        null,
-	        scores,
-	        React.createElement(
-	          'li',
-	          null,
-	          ' ',
-	          this.props.player.currentScore,
-	          ' '
-	        )
+	        scores
 	      )
 	    );
 	  }

@@ -2,7 +2,7 @@ var React = require('react');
 
 var GameStartBox = React.createClass({
   getInitialState: function() {
-      return {player1: 'Player 1', player2: 'Player 2'};
+      return {player1: '', player2: ''};
   },
   handlePlayer1Change: function(e) {
     this.setState({player1: e.target.value});
@@ -17,9 +17,8 @@ var GameStartBox = React.createClass({
 
     var players = {player1: player1, player2: player2};
     this.props.onStartGame(players);
-
-    //this.setState({player1: 'Player 1', player2: 'Player 2'});
   },
+
   render: function() {
     return (
       <div className="gameBox">
