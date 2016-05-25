@@ -48,8 +48,8 @@
 	
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var GameBox = __webpack_require__(160);
-	var Game = __webpack_require__(161);
+	var GameBox = __webpack_require__(159);
+	var Game = __webpack_require__(160);
 	
 	window.onload = function () {
 	  var game = new Game();
@@ -19665,34 +19665,32 @@
 
 
 /***/ },
-/* 159 */,
-/* 160 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var Game = __webpack_require__(161);
+	var Game = __webpack_require__(160);
 	var Player = __webpack_require__(161);
-	var GameStartBox = __webpack_require__(164);
-	var PlayerScoreBox = __webpack_require__(165);
-	var PlayerScoreForm = __webpack_require__(166);
+	var GameStartBox = __webpack_require__(163);
+	var PlayerScoreBox = __webpack_require__(164);
+	var PlayerScoreForm = __webpack_require__(165);
 	
 	var GameBox = React.createClass({
 	  displayName: 'GameBox',
 	
 	  getInitialState: function getInitialState() {
-	    var game = new Game();
+	    var game = new Game(501);
 	    return { game: game };
 	  },
 	
-	  onStartGame: function onStartGame(players) {
-	    var gameState = this.state.game.setPlayers(players.player1, players.player2);
+	  onStartGame: function onStartGame(gameInfo) {
+	    var gameState = this.state.game.setupGame(gameInfo.player1, gameInfo.player2, gameInfo.startScore);
 	    this.setState({ game: gameState });
 	  },
 	
 	  onSubmitScore: function onSubmitScore(score) {
-	    //console.log("player threw " + score);
 	    var gameState = this.state.game.playerThrow(score);
 	    this.setState({ game: gameState });
 	  },
@@ -19719,22 +19717,38 @@
 	        );
 	      } else if (this.state.game.thrower.isOnAFinish()) {
 	        header = React.createElement(
-	          'span',
+	          'div',
 	          null,
-	          ' ',
-	          this.state.game.thrower.name,
-	          ', you require ',
-	          this.state.game.thrower.currentScore,
-	          React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
+	          React.createElement(
+	            'div',
+	            { className: 'currentThrower' },
+	            ' ',
+	            this.state.game.thrower.name,
+	            ', you require ',
+	            this.state.game.thrower.currentScore
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'scoreForm' },
+	            React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
+	          )
 	        );
 	      } else {
+	
 	        header = React.createElement(
-	          'span',
+	          'div',
 	          null,
-	          ' ',
-	          this.state.game.thrower.name,
-	          ' to Throw',
-	          React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
+	          React.createElement(
+	            'div',
+	            { className: 'currentThrower' },
+	            this.state.game.thrower.name,
+	            ' to Throw'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'scoreForm' },
+	            React.createElement(PlayerScoreForm, { onSubmitScore: this.onSubmitScore })
+	          )
 	        );
 	      }
 	      return React.createElement(
@@ -19742,16 +19756,11 @@
 	        { className: 'scores' },
 	        React.createElement(
 	          'div',
-	          null,
-	          header
-	        ),
-	        React.createElement(
-	          'div',
 	          { className: 'scoreHeader' },
 	          React.createElement(
 	            'label',
 	            { id: 'lblStartScore' },
-	            '501'
+	            this.state.game.startScore
 	          )
 	        ),
 	        React.createElement(
@@ -19801,6 +19810,11 @@
 	              )
 	            )
 	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          header
 	        )
 	      );
 	    }
@@ -19810,30 +19824,30 @@
 	module.exports = GameBox;
 
 /***/ },
-/* 161 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Player = __webpack_require__(162);
-	var Throw = __webpack_require__(163);
+	var Player = __webpack_require__(161);
+	var Throw = __webpack_require__(162);
 	
-	var Game = function Game() {
-	  this.startScore = 501;
-	  var player1 = new Player();
-	  var player2 = new Player();
+	var Game = function Game(startScore) {
+	  var startScore = startScore;
+	  var player1 = new Player('Player 1', 501);
+	  var player2 = new Player('Player 2', 501);
 	};
 	
 	Game.prototype = {
 	
 	  gameState: function gameState() {
-	    var game = new Game();
-	    game.startScore = 501;
+	    var game = new Game(this.startScore);
+	    game.startScore = this.startScore;
 	    game.player1 = this.player1;
 	    game.player2 = this.player2;
 	    game.winner = this.winner;
 	    game.thrower = this.thrower;
-	
+	    console.log(game);
 	    return game;
 	  },
 	
@@ -19858,11 +19872,14 @@
 	    }
 	  },
 	
-	  setPlayers: function setPlayers(player1, player2) {
-	    console.log(player1 + " v " + player2);
-	    this.player1 = new Player(player1, this.startScore);
-	    this.player2 = new Player(player2, this.startScore);
+	  setupGame: function setupGame(player1, player2, startScore) {
+	    console.log(player1 + " " + startScore + " " + player2);
+	    this.player1 = new Player(player1, startScore);
+	    this.player2 = new Player(player2, startScore);
+	    console.log(this);
+	    this.startScore = startScore;
 	    this.thrower = this.player1;
+	    console.log(this);
 	    return this.gameState();
 	  },
 	
@@ -19912,17 +19929,19 @@
 	module.exports = Game;
 
 /***/ },
-/* 162 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Throw = __webpack_require__(163);
+	var Throw = __webpack_require__(162);
 	
 	var Player = function Player(name, startScore) {
 	  this.name = name;
 	  this.currentScore = startScore;
-	  this.scores = [501];
+	  this.scores = [this.currentScore];
+	  //console.log(startScore);
+	  //this.scores.push(startScore);
 	};
 	
 	Player.prototype = {
@@ -19962,7 +19981,7 @@
 	module.exports = Player;
 
 /***/ },
-/* 163 */
+/* 162 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -19986,7 +20005,7 @@
 	module.exports = Throw;
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19997,28 +20016,78 @@
 	  displayName: 'GameStartBox',
 	
 	  getInitialState: function getInitialState() {
-	    return { player1: '', player2: '' };
+	    return { player1: '', player2: '', startScore: '' };
 	  },
+	
 	  handlePlayer1Change: function handlePlayer1Change(e) {
 	    this.setState({ player1: e.target.value });
 	  },
+	
 	  handlePlayer2Change: function handlePlayer2Change(e) {
 	    this.setState({ player2: e.target.value });
 	  },
+	
+	  onStartScoreChanged: function onStartScoreChanged(e) {
+	    this.setState({ startScore: e.target.value });
+	    console.log(e.target.value);
+	  },
+	
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
 	    var player1 = this.state.player1;
 	    var player2 = this.state.player2;
+	    var startScore = this.state.startScore;
 	
-	    var players = { player1: player1, player2: player2 };
-	    this.props.onStartGame(players);
+	    var gameInfo = { player1: player1, player2: player2, startScore: startScore };
+	    this.props.onStartGame(gameInfo);
 	  },
 	
 	  render: function render() {
+	    var startScoreOptions = React.createElement(
+	      'span',
+	      { className: 'radioList' },
+	      React.createElement(
+	        'label',
+	        null,
+	        'Start Score: '
+	      ),
+	      '301 ',
+	      React.createElement('input', { type: 'radio', name: 'startScore', value: '301', onChange: this.onStartScoreChanged }),
+	      '501 ',
+	      React.createElement('input', { type: 'radio', name: 'startScore', value: '501', onChange: this.onStartScoreChanged, defaultChecked: 'checked' }),
+	      '701 ',
+	      React.createElement('input', { type: 'radio', name: 'startScore', value: '701', onChange: this.onStartScoreChanged }),
+	      '1001 ',
+	      React.createElement('input', { type: 'radio', name: 'startScore', value: '1001', onChange: this.onStartScoreChanged })
+	    );
+	
+	    var soundEffectOptions = React.createElement(
+	      'span',
+	      { className: 'radioList' },
+	      React.createElement(
+	        'label',
+	        null,
+	        'Sound Effects: '
+	      ),
+	      'Off ',
+	      React.createElement('input', { type: 'radio', name: 'sounds', value: 'off', defaultChecked: 'checked' }),
+	      'On ',
+	      React.createElement('input', { type: 'radio', name: 'sounds', value: 'on' })
+	    );
+	
 	    return React.createElement(
 	      'div',
-	      { className: 'gameBox' },
-	      'Let\'s play darts.',
+	      { className: 'gameBox introBlurb playerInfo' },
+	      React.createElement(
+	        'p',
+	        null,
+	        'Welcome to our simple dart scorer app'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        'Enter the names of each player/team'
+	      ),
 	      React.createElement(
 	        'form',
 	        { className: 'playerForm', onSubmit: this.handleSubmit },
@@ -20028,7 +20097,17 @@
 	        React.createElement('input', { type: 'text', placeholder: 'Player 2',
 	          value: this.state.player2,
 	          onChange: this.handlePlayer2Change }),
-	        React.createElement('input', { type: 'submit', value: 'Start Game' })
+	        React.createElement(
+	          'p',
+	          null,
+	          startScoreOptions
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          soundEffectOptions
+	        ),
+	        React.createElement('input', { type: 'submit', className: 'btnSubmit', value: 'Start Game' })
 	      )
 	    );
 	  }
@@ -20037,13 +20116,13 @@
 	module.exports = GameStartBox;
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var PlayerScoreForm = __webpack_require__(166);
+	var PlayerScoreForm = __webpack_require__(165);
 	
 	var PlayerScoreBox = React.createClass({
 	  displayName: 'PlayerScoreBox',
@@ -20088,7 +20167,7 @@
 	module.exports = PlayerScoreBox;
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20117,8 +20196,8 @@
 	    return React.createElement(
 	      'form',
 	      { className: 'playerScoreForm', onSubmit: this.handleSubmit },
-	      React.createElement('input', { type: 'text', placeholder: ' Enter Score', onChange: this.handleScoreChange }),
-	      React.createElement('input', { type: 'submit', className: 'submitScore', value: 'Enter' })
+	      React.createElement('input', { type: 'text', placeholder: ' Enter Score', className: 'txtScore', onChange: this.handleScoreChange }),
+	      React.createElement('input', { type: 'submit', className: 'btnSubmit', value: 'Enter' })
 	    );
 	  }
 	});

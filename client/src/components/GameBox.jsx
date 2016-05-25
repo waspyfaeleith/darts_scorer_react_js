@@ -1,23 +1,22 @@
 var React = require('react');
 var Game = require('../classes/game')
-var Player = require('../classes/game')
+var Player = require('../classes/player')
 var GameStartBox = require('./GameStartBox');
 var PlayerScoreBox = require('./PlayerScoreBox');
 var PlayerScoreForm = require('./PlayerScoreForm');
 
 var GameBox = React.createClass({
   getInitialState: function() {
-    var game = new Game();
+    var game = new Game(501);
     return ({ game: game });
   },
 
-  onStartGame: function(players) {
-    var gameState = this.state.game.setPlayers(players.player1, players.player2);
+  onStartGame: function(gameInfo) {
+    var gameState = this.state.game.setupGame(gameInfo.player1, gameInfo.player2, gameInfo.startScore);
     this.setState({game: gameState});
   },
 
   onSubmitScore: function(score)  {
-    //console.log("player threw " + score);
     var gameState = this.state.game.playerThrow(score);
     this.setState({game: gameState});
   },
@@ -39,19 +38,30 @@ var GameBox = React.createClass({
      if (this.state.game.winner != null) {
         header = <span>Game shot, and the leg, to {this.state.game.winner.name}</span>
      } else if (this.state.game.thrower.isOnAFinish()) {
-        header = <span> {this.state.game.thrower.name}, you require { this.state.game.thrower.currentScore}
-        <PlayerScoreForm onSubmitScore={this.onSubmitScore}></PlayerScoreForm></span>;
+        header = <div> 
+                    <div className="currentThrower"> {this.state.game.thrower.name}, you require { this.state.game.thrower.currentScore} 
+                    </div>
+                      <div className="scoreForm">
+                        <PlayerScoreForm onSubmitScore={this.onSubmitScore}></PlayerScoreForm>
+                      </div>
+                 </div>;
+    
      } else {
-      header = <span> {this.state.game.thrower.name} to Throw 
-      <PlayerScoreForm onSubmitScore={this.onSubmitScore}></PlayerScoreForm></span>;
+      
+      header = <div> 
+                  <div className="currentThrower"> 
+                  {this.state.game.thrower.name} to Throw 
+                  </div>
+                  <div className="scoreForm">
+                    <PlayerScoreForm onSubmitScore={this.onSubmitScore}></PlayerScoreForm>
+                  </div>
+              </div>;
     }
       return (
         <div className="scores">
-        <div>
-          { header }
-        </div>
+        
           <div className="scoreHeader">
-            <label id="lblStartScore">501</label>
+            <label id="lblStartScore">{this.state.game.startScore}</label>
           </div>
           <table className="scoreTable">
             <thead>
@@ -75,6 +85,9 @@ var GameBox = React.createClass({
              </tr>
             </tbody>
           </table>
+          <div>
+            { header }
+          </div>
         </div>
       );
     }

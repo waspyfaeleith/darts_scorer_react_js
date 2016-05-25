@@ -3,7 +3,9 @@ var Throw = require('./throw');
 var Player = function(name, startScore) {
   this.name = name;
   this.currentScore = startScore;
-  this.scores = [501];
+  this.scores = [this.currentScore];
+  //console.log(startScore);
+  //this.scores.push(startScore);
 };
 
 Player.prototype = {

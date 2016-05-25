@@ -1,22 +1,22 @@
 var Player = require('./player');
 var Throw = require('./throw');
 
-var Game = function() {
-  this.startScore = 501;
-  var player1 = new Player();
-  var player2 = new Player();
+var Game = function(startScore) {
+  var startScore = startScore;
+  var player1 = new Player('Player 1', 501);
+  var player2 = new Player('Player 2', 501);
 };
 
 Game.prototype = {
 
   gameState: function () {
-    var game = new Game();
-    game.startScore = 501;
+    var game = new Game(this.startScore);
+    game.startScore = this.startScore;
     game.player1 = this.player1;
     game.player2 = this.player2;
     game.winner = this.winner;
     game.thrower = this.thrower;
-
+    console.log(game);
     return game;
   },
 
@@ -41,11 +41,14 @@ Game.prototype = {
     }
   },
 
-  setPlayers: function(player1, player2) {
-    console.log(player1 + " v " + player2)
-    this.player1 = new Player(player1, this.startScore);
-    this.player2 = new Player(player2, this.startScore);
+  setupGame: function(player1, player2, startScore) {
+    console.log(player1 + " " + startScore + " " + player2);
+    this.player1 = new Player(player1, startScore);
+    this.player2 = new Player(player2, startScore);
+    console.log(this);
+    this.startScore = startScore;
     this.thrower = this.player1;
+    console.log(this);
     return this.gameState();
   },
 

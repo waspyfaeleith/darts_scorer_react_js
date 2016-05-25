@@ -19,8 +19,8 @@ var PlayerScoreForm = React.createClass({
   render: function() {
     return (
       <form className="playerScoreForm" onSubmit={this.handleSubmit}>
-        <input type="text" placeholder=" Enter Score" onChange={this.handleScoreChange}/>
-        <input type="submit" className="submitScore" value="Enter"/>
+        <input type="text" placeholder=" Enter Score" className="txtScore" onChange={this.handleScoreChange}/>
+        <input type="submit" className="btnSubmit" value="Enter"/>
       </form>
     );
   }
