@@ -2,7 +2,8 @@ var Player = require('./player');
 var Throw = require('./throw');
 
 var Game = function(startScore) {
-  var startScore = startScore;
+  console.log(startScore)
+  this.startScore = startScore;
   var player1 = new Player('Player 1', 501);
   var player2 = new Player('Player 2', 501);
 };
