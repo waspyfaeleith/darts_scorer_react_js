@@ -2,7 +2,7 @@ var React = require('react');
 
 var GameStartBox = React.createClass({
   getInitialState: function() {
-      return {player1: '', player2: '', startScore: ''};
+      return {player1: '', player2: '', startScore: 501};
   },
 
   handlePlayer1Change: function(e) {
@@ -25,6 +25,7 @@ var GameStartBox = React.createClass({
     var startScore = this.state.startScore;
 
     var gameInfo = {player1: player1, player2: player2, startScore: startScore};
+    console.log("gameInfo:", gameInfo);
     this.props.onStartGame(gameInfo);
   },
 

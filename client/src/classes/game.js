@@ -43,7 +43,7 @@ Game.prototype = {
   },
 
   setupGame: function(player1, player2, startScore) {
-    console.log(player1 + " " + startScore + " " + player2);
+    console.log("setupGame:",player1 + " " + startScore + " " + player2);
     this.player1 = new Player(player1, startScore);
     this.player2 = new Player(player2, startScore);
     console.log(this);

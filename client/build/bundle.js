@@ -19960,7 +19960,7 @@
 	  },
 	
 	  setupGame: function setupGame(player1, player2, startScore) {
-	    console.log(player1 + " " + startScore + " " + player2);
+	    console.log("setupGame:", player1 + " " + startScore + " " + player2);
 	    this.player1 = new Player(player1, startScore);
 	    this.player2 = new Player(player2, startScore);
 	    console.log(this);
@@ -20103,7 +20103,7 @@
 	  displayName: 'GameStartBox',
 	
 	  getInitialState: function getInitialState() {
-	    return { player1: '', player2: '', startScore: '' };
+	    return { player1: '', player2: '', startScore: 501 };
 	  },
 	
 	  handlePlayer1Change: function handlePlayer1Change(e) {
@@ -20126,6 +20126,7 @@
 	    var startScore = this.state.startScore;
 	
 	    var gameInfo = { player1: player1, player2: player2, startScore: startScore };
+	    console.log("gameInfo:", gameInfo);
 	    this.props.onStartGame(gameInfo);
 	  },
 	
